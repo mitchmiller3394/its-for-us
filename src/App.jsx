@@ -1,6 +1,47 @@
+import { useEffect, useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
 import './App.css'
 
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+
+const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null
+
 function App() {
+  const [instruments, setInstruments] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const fetchInstruments = async () => {
+      if (!supabase) {
+        setError('Missing Supabase environment variables. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to .env.local.')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const { data, error: supabaseError } = await supabase
+          .from('instruments')
+          .select('*')
+
+        if (supabaseError) {
+          throw supabaseError
+        }
+
+        setInstruments(data ?? [])
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchInstruments()
+  }, [])
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -47,7 +88,7 @@ function App() {
               </li>
               <li>
                 <strong>Supabase</strong>
-                <span>Future backend</span>
+                <span>Live backend</span>
               </li>
             </ul>
           </div>
@@ -55,19 +96,32 @@ function App() {
           <div className="hero-panel" aria-label="App preview">
             <div className="panel-card panel-card-large">
               <span className="label">Project status</span>
-              <h2>Ready for build</h2>
+              <h2>Supabase connected</h2>
               <div className="mini-bar">
                 <span className="fill" />
               </div>
-              <ul>
-                <li>React app scaffolded</li>
-                <li>Vite dev/build ready</li>
-                <li>GitHub Pages friendly</li>
-              </ul>
+
+              <div className="supabase-panel">
+                {loading && <p>Loading instruments...</p>}
+                {error && <p className="error-text">{error}</p>}
+                {!loading && !error && instruments.length === 0 && (
+                  <p>No instruments found yet.</p>
+                )}
+                {!loading && !error && instruments.length > 0 && (
+                  <ul>
+                    {instruments.map((instrument) => (
+                      <li key={instrument.id}>
+                        <strong>{instrument.name ?? 'Untitled instrument'}</strong>
+                        {instrument.category ? <span>{instrument.category}</span> : null}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
             <div className="panel-card panel-card-small">
               <span className="label">Next steps</span>
-              <p>Wire in auth and data</p>
+              <p>Authenticate users and query your own data model.</p>
             </div>
           </div>
         </section>

@@ -4,10 +4,16 @@ A React + Vite app shell for a future GitHub Pages site with Supabase-backed dat
 
 ## Local development
 
+Use the default Vite command for normal local work:
+
 ```bash
-npm install
-npm run dev -- --host 0.0.0.0
+npm run dev
 ```
+
+The `-- --host 0.0.0.0` flag is optional. It is useful when you want the app to be reachable from another device, VM, or a local network, but it is not required for everyday development on your Mac. In other words:
+
+- `npm run dev` = standard local development
+- `npm run dev -- --host 0.0.0.0` = expose the app to the network
 
 Then open the local Vite URL in the terminal output, usually:
 
