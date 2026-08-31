@@ -19,6 +19,14 @@ Then open the local Vite URL in the terminal output, usually:
 npm run build
 ```
 
+## GitHub Pages
+
+This app is configured to emit the production build into a root-level `docs` directory, which is suitable for GitHub Pages deployment from the main branch.
+
+```bash
+npm run build
+```
+
 ## Notes
 
 - The app is scaffolded with Vite and React.
