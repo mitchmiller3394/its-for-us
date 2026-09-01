@@ -1,4 +1,6 @@
-export function Sidebar({ items, activeItem, onSelect }) {
+import { NavLink } from 'react-router'
+
+export function Sidebar({ items }) {
   return (
     <aside className="sidebar">
       <div className="brand-block">
@@ -11,15 +13,15 @@ export function Sidebar({ items, activeItem, onSelect }) {
 
       <nav className="sidebar-nav" aria-label="Main navigation">
         {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={`nav-item ${activeItem === item.id ? 'is-active' : ''}`}
-            onClick={() => onSelect(item.id)}
+          <NavLink
+            key={item.path}
+            to={item.path}
+            end={item.path === '/'}
+            className={({ isActive }) => `nav-item${isActive ? ' is-active' : ''}`}
           >
             <span className="nav-item__icon">{item.icon}</span>
             <span>{item.label}</span>
-          </button>
+          </NavLink>
         ))}
       </nav>
     </aside>

@@ -1,7 +1,7 @@
 export function MessagesPage() {
   const posts = [
     { author: 'Mitch', text: 'You make every day feel calmer and easier.', time: 'Today' },
-    { author: 'Aly', text: 'Let’s do a movie night this weekend and order something cozy.', time: 'Yesterday' },
+    { author: 'Syd', text: 'Let’s do a movie night this weekend and order something cozy.', time: 'Yesterday' },
     { author: 'Mitch', text: 'I loved the way we laughed together at brunch.', time: 'Last week' },
   ]
 

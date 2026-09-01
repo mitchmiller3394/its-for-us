@@ -1,9 +1,12 @@
-import { useMemo, useState } from 'react'
 import './App.css'
+import { HashRouter, Navigate, Route, Routes } from 'react-router'
 import { Layout } from './components/Layout'
+import { RequireAuth } from './components/RequireAuth'
+import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { ActivitiesPage } from './pages/ActivitiesPage'
 import { AlbumsPage } from './pages/AlbumsPage'
+import { AuthPage } from './pages/AuthPage'
 import { CalendarPage } from './pages/CalendarPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LinksPage } from './pages/LinksPage'
@@ -11,56 +14,50 @@ import { MessagesPage } from './pages/MessagesPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { TasksPage } from './pages/TasksPage'
 
-const navItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: '⌂' },
-  { id: 'calendar', label: 'Calendar', icon: '☰' },
-  { id: 'tasks', label: 'Tasks', icon: '✓' },
-  { id: 'messages', label: 'Messages', icon: '✉' },
-  { id: 'albums', label: 'Albums', icon: '◌' },
-  { id: 'activities', label: 'Activities', icon: '✦' },
-  { id: 'links', label: 'Links', icon: '↗' },
-  { id: 'settings', label: 'Settings', icon: '⚙' },
+export const navItems = [
+  { path: '/', label: 'Dashboard', icon: '⌂' },
+  { path: '/calendar', label: 'Calendar', icon: '☰' },
+  { path: '/tasks', label: 'Tasks', icon: '✓' },
+  { path: '/messages', label: 'Messages', icon: '✉' },
+  { path: '/albums', label: 'Albums', icon: '◌' },
+  { path: '/activities', label: 'Activities', icon: '✦' },
+  { path: '/links', label: 'Links', icon: '↗' },
+  { path: '/settings', label: 'Settings', icon: '⚙' },
 ]
 
 function App() {
-  const [activePage, setActivePage] = useState('dashboard')
-
-  const pageTitle = useMemo(
-    () => navItems.find((item) => item.id === activePage)?.label ?? 'Dashboard',
-    [activePage],
-  )
-
-  const renderPage = () => {
-    switch (activePage) {
-      case 'calendar':
-        return <CalendarPage />
-      case 'tasks':
-        return <TasksPage />
-      case 'messages':
-        return <MessagesPage />
-      case 'albums':
-        return <AlbumsPage />
-      case 'activities':
-        return <ActivitiesPage />
-      case 'links':
-        return <LinksPage />
-      case 'settings':
-        return <SettingsPage />
-      default:
-        return <DashboardPage />
-    }
-  }
-
   return (
     <ThemeProvider>
-      <Layout
-        items={navItems}
-        activeItem={activePage}
-        onSelect={setActivePage}
-        pageTitle={pageTitle}
-      >
-        {renderPage()}
-      </Layout>
+      <AuthProvider>
+        <HashRouter>
+          <Routes>
+            {/* Public route */}
+            <Route path="/login" element={<AuthPage />} />
+
+            {/* All app routes are protected */}
+            <Route
+              path="/*"
+              element={
+                <RequireAuth>
+                  <Layout items={navItems}>
+                    <Routes>
+                      <Route path="/" element={<DashboardPage />} />
+                      <Route path="/calendar" element={<CalendarPage />} />
+                      <Route path="/tasks" element={<TasksPage />} />
+                      <Route path="/messages" element={<MessagesPage />} />
+                      <Route path="/albums" element={<AlbumsPage />} />
+                      <Route path="/activities" element={<ActivitiesPage />} />
+                      <Route path="/links" element={<LinksPage />} />
+                      <Route path="/settings" element={<SettingsPage />} />
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </Layout>
+                </RequireAuth>
+              }
+            />
+          </Routes>
+        </HashRouter>
+      </AuthProvider>
     </ThemeProvider>
   )
 }
