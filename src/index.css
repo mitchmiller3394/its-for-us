@@ -54,8 +54,8 @@
   font-family: Inter, 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #e2e8f0;
-  background: #020817;
+  color: #1f2937;
+  background: #f9f4f5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -74,10 +74,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(139, 92, 246, 0.26), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.18), transparent 28%),
-    #020817;
 }
 
 img {
@@ -85,16 +81,22 @@ img {
   display: block;
 }
 
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
 #root {
   min-height: 100vh;
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
 }
 
 h1,
@@ -143,11 +145,4 @@ code {
 
 a {
   color: inherit;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
 }
